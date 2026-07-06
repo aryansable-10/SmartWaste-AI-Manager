@@ -88,8 +88,9 @@ Google Sheet
 Email Alert
 (image)
 
+6]License----Use the MIT License.
 
-6]Future Improvements:
+7] Future Improvements:
 Example--
 
 • Mobile Application
@@ -101,7 +102,7 @@ Example--
 • SMS Alerts
 
 
-7] Learning Outcomes: 
+8] Learning Outcomes: 
 
 • AI Agent Development
 • Prompt Engineering
