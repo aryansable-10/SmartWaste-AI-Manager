@@ -1,0 +1,650 @@
+{
+  "name": "SmartWaste_AI_Manager",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "599df957-7b19-4de7-a648-1052205d3c2d",
+      "name": "When chat message received",
+      "webhookId": "ba2bbf37-3818-425a-b5f0-f83aa2dab8d1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are SmartWaste AI Manager, an AI-powered Environmental Waste Detection and Reporting Assistant.\n\nYour primary responsibility is to analyze uploaded images of public places and identify waste-related environmental issues accurately.\n\nYour goal is to help municipalities, NGOs, and citizens detect waste problems early, assess their severity, and recommend appropriate actions.\n\n──────────────────────────────\nUSER INPUT\n──────────────────────────────\n\nThe user may provide:\n\n1. A waste image (Required)\n2. Waste Location (Required)\n3. Additional Notes (Optional)\n\nIf the location is missing, politely ask:\n\n📍 Please enter the location where the waste was found.\n\nIf the image is missing, politely ask:\n\n📷 Please upload a clear image of the waste.\n\nIf additional notes are provided, use them only to improve the analysis. Do not assume information that is not visible in the image.\n\n──────────────────────────────\nYOUR RESPONSIBILITIES\n──────────────────────────────\n\nCarefully inspect every uploaded image.\n\nExtract the user-provided:\n\n• Location\n• Additional Notes (if available)\n\nThen identify:\n\n1. Waste Type\n\nChoose ONLY one:\n\n- Plastic Waste\n- Organic Waste\n- Electronic Waste (E-Waste)\n- Construction Waste\n- Medical Waste\n- Mixed Waste\n- Hazardous Waste\n- Illegal Dumping\n- General Litter\n- No Waste Detected\n\n2. Severity Level\n\nClassify as:\n\n• Low\n• Medium\n• High\n• Critical\n\n3. Estimated Waste Size\n\nChoose:\n\n- Small\n- Medium\n- Large\n\n4. Public Risk\n\nChoose:\n\n- Low\n- Medium\n- High\n\n5. Confidence Score\n\nReturn a value between 0 and 100.\n\n6. Recommended Action\n\nProvide one clear recommendation.\n\n7. Responsible Department\n\nChoose the most appropriate department.\n\n8. Summary\n\nWrite a concise summary (2–3 sentences) describing:\n\n• What is visible\n• Why it is important\n• What action should be taken\n\n──────────────────────────────\nIMPORTANT RULES\n──────────────────────────────\n\n✔ Analyze only what is visible in the uploaded image.\n\n✔ Never invent objects, locations, or environmental conditions.\n\n✔ Use the user-provided location exactly as written.\n\n✔ Use the user's additional notes only as supporting information.\n\n✔ If the image is unclear, lower the confidence score.\n\n✔ If no waste is detected:\n\nWaste Type:\nNo Waste Detected\n\nSeverity:\nNone\n\nRisk:\nLow\n\nRecommendation:\nNo action required.\n\nAlways return structured JSON only.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "4b0c1f2a-bb90-42c1-8026-44cd3325e66d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        368
+      ],
+      "id": "fde46dbe-c08f-4f70-bb04-07805d666cbd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YIGkcIWRVtaXN0vx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"report_id\": \"SW-20260705-001\",\n  \"location\": \"MG Road, Pune\",\n  \"user_notes\": \"Overflowing dustbin near the bus stop.\",\n  \"waste_type\": \"Mixed Waste\",\n  \"severity\": \"High\",\n  \"waste_size\": \"Large\",\n  \"public_risk\": \"High\",\n  \"confidence\": 95,\n  \"recommended_action\": \"Immediate municipal cleanup required.\",\n  \"department\": \"Municipal Solid Waste Department\",\n  \"summary\": \"A large amount of mixed waste is overflowing from a public dustbin near the bus stop. Immediate cleanup is recommended to prevent environmental pollution and health risks.\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        304
+      ],
+      "id": "fb158888-4af0-4a3d-af5a-3e82db857ca9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        832,
+        496
+      ],
+      "id": "8cc19f02-743b-4cd4-bb3e-307640a4ea0f",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "S67kgcCWdd472DJP",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iQFJtI43f-ZJpSwAzSnN1R9c--TFvr68fa9p-gOpq9I",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 449257345,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iQFJtI43f-ZJpSwAzSnN1R9c--TFvr68fa9p-gOpq9I/edit#gid=449257345"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Public Risk": "={{ $json.output.public_risk }}",
+            "Report ID": "={{ $json.output.report_id }}",
+            "Waste Type": "={{ $json.output.waste_type }}",
+            "Department": "={{ $json.output.department }}",
+            "Recommended Action": "={{ $json.output.recommended_action }}",
+            "Summary ": "={{ $json.output.summary }}",
+            "Severity": "={{ $json.output.severity }}",
+            "Date": "={{$now.toFormat(\"dd-MM-yyyy HH:mm:ss\")}}",
+            "Location": "={{ $json.output.location }}",
+            "User_Notes": "={{ $json.output.user_notes }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Report ID",
+              "displayName": "Report ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Waste Type",
+              "displayName": "Waste Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Public Risk",
+              "displayName": "Public Risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommended Action",
+              "displayName": "Recommended Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary ",
+              "displayName": "Summary ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "User_Notes",
+              "displayName": "User_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        0
+      ],
+      "id": "02ed2ee8-b08d-4cec-b991-0cd508a6723f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CV244XcWizvVvqgP",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f550dcca-a61e-408e-8733-7dd2dedf7fef",
+              "leftValue": "={{ $json.Severity }}",
+              "rightValue": "High",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "9b0e1d02-8893-4e3a-ab8f-dd77ff1e54a2",
+              "leftValue": "={{ $json.Severity }}",
+              "rightValue": "Critical",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "2cdc7043-0bd2-4898-805f-911cd6ab50eb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "sablearyan128@gmail.com",
+        "subject": "🚨 SmartWaste AI Alert – Immediate Action Required",
+        "message": "=Hello Municipal Team, \nA new waste incident has been detected by SmartWaste AI Manager. \n\n🗑️ Waste Type:{{ $json['Waste Type'] }}\n\n🚨Severity: {{ $json.Severity }}\n\n⚠️ Public Risk: {{ $json['Public Risk'] }} \n\n🏛️ Department:  {{ $json.Department }}\n\n📋 Recommended Action: {{ $json['Recommended Action'] }} \n\n\n📝 Summary:  {{ $json['Summary '] }}\n\n\n\nThis alert was generated automatically by SmartWaste AI Manager.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        -16
+      ],
+      "id": "b236489a-3a41-4f6c-b675-d9f002671e72",
+      "name": "Update google sheet",
+      "webhookId": "812afd3f-966b-4a06-b0f1-017d3a6c16b2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P93LtIJEWv5PW30X",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1iQFJtI43f-ZJpSwAzSnN1R9c--TFvr68fa9p-gOpq9I",
+          "mode": "list",
+          "cachedResultName": "waste",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iQFJtI43f-ZJpSwAzSnN1R9c--TFvr68fa9p-gOpq9I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 449257345,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iQFJtI43f-ZJpSwAzSnN1R9c--TFvr68fa9p-gOpq9I/edit#gid=449257345"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Report ID": "={{ $('Append row in sheet').item.json['Report ID'] }}",
+            "Status": "={{ $json.labelIds[0] }}"
+          },
+          "matchingColumns": [
+            "Report ID"
+          ],
+          "schema": [
+            {
+              "id": "Report ID",
+              "displayName": "Report ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Waste Type",
+              "displayName": "Waste Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Public Risk",
+              "displayName": "Public Risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Recommended Action",
+              "displayName": "Recommended Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary ",
+              "displayName": "Summary ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1760,
+        -16
+      ],
+      "id": "ad0a0bca-3861-4a0c-8cf4-9423681c834a",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CV244XcWizvVvqgP",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "data0",
+        "name": "={{\"Waste_\"+$now.toFormat(\"yyyyMMddHHmmss\")+\".jpg\"}}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1HNzHpBadpJiMUj7QTngTccQ3-fAGXm66",
+          "mode": "list",
+          "cachedResultName": "Smart_Waste AI Reports",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1HNzHpBadpJiMUj7QTngTccQ3-fAGXm66"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b5a58fcf-bcde-4136-98be-676e85969e72",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "MknfD6q6qWixsAkV",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "ab1031cd-4252-4403-a7ec-312ca1952d6a",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "MknfD6q6qWixsAkV",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update google sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update google sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "618b0bbf-2e2a-44a4-ae11-1b211d6814a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f887bef9e81fe1aecb81f2c907fc6f7535913140544948e4d658f4b17ae30cc9"
+  },
+  "nodeGroups": [],
+  "id": "gekSjtNvhywBgp0U",
+  "tags": []
+}
