@@ -1,10 +1,10 @@
 # SmartWaste-AI-Manager
 AI-powered Smart Waste Detection & Municipal Reporting System using n8n and Google Gemini AI.
 
-Project Overview:
+1]Project Overview:
 SmartWaste AI Manager is an AI-powered environmental monitoring solution that allows users to upload waste images. The system analyzes the image using Gemini AI, generates a structured waste report, stores it in Google Sheets, uploads the image to Google Drive, and automatically notifies municipal authorities via Gmail for high-priority cases.
 
-Features--
+2]Features--
 Example:
 
 ✅ AI Waste Detection
@@ -18,7 +18,7 @@ Example:
 ✅ Municipal Reporting
 ✅ Built using n8n Automation
 
-Tech Stack:
+3]Tech Stack:
 Automation
 • n8n
 
@@ -41,7 +41,7 @@ Prompt Engineering
 • Structured Output Parser
 
 
-Workflow:
+4] Workflow:
 Include a simple diagram:
 
 User Upload
@@ -73,7 +73,7 @@ Update Sheet
 Google Drive
 
 
-Project Screenshots:
+5] Project Screenshots:
 Show screenshots like:
 
 Workflow
@@ -89,10 +89,7 @@ Email Alert
 (image)
 
 
-Folder Structure
-Show your project tree.
-
-Future Improvements:
+6]Future Improvements:
 Example--
 
 • Mobile Application
@@ -104,7 +101,7 @@ Example--
 • SMS Alerts
 
 
-Learning Outcomes: Mention what you learned
+7] Learning Outcomes: 
 
 • AI Agent Development
 • Prompt Engineering
@@ -114,7 +111,5 @@ Learning Outcomes: Mention what you learned
 • Google Sheets Automation
 • Gmail Automation
 • Google Drive Integration
-
 • Structured Output Parsing
-
 • End-to-End AI Automation
